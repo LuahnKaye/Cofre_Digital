@@ -1,0 +1,91 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "title": "Taxa de Requisições (Tráfego)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "targets": [
+        {
+          "expr": "sum(rate(http_requests_total[5m])) by (method, endpoint)",
+          "legendFormat": "{{method}} {{endpoint}}"
+        }
+      ]
+    },
+    {
+      "title": "Latência (P95)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[5m])) by (le))",
+          "legendFormat": "P95 Latency"
+        }
+      ]
+    },
+    {
+      "title": "Taxa de Erros (5xx)",
+      "type": "stat",
+      "gridPos": { "h": 8, "w": 6, "x": 0, "y": 8 },
+      "targets": [
+        {
+          "expr": "sum(rate(http_requests_total{status=~\"5..\"}[5m]))",
+          "legendFormat": "Erros"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "red", "value": 0.01 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "title": "Uso de Memória (Saturação)",
+      "type": "gauge",
+      "gridPos": { "h": 8, "w": 6, "x": 6, "y": 8 },
+      "targets": [
+        {
+          "expr": "process_resident_memory_bytes / 1024 / 1024",
+          "legendFormat": "MB"
+        }
+      ]
+    }
+  ],
+  "refresh": "5s",
+  "schemaVersion": 36,
+  "style": "dark",
+  "tags": ["cofre-digital", "backend"],
+  "templating": { "list": [] },
+  "time": { "from": "now-15m", "to": "now" },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Cofre Digital - Golden Signals",
+  "uid": "cofre-digital-metrics",
+  "version": 1,
+  "weekStart": ""
+}

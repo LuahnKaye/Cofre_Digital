@@ -1,4 +1,4 @@
-# 🛡️ Cofre Digital — Zero-Knowledge & High Resilience Vault
+# 🛡️ Cofre Digital
 
 [![CI/CD Pipeline](https://github.com/LuahnKaye/Cofre_Digital/actions/workflows/ci.yml/badge.svg)](https://github.com/LuahnKaye/Cofre_Digital/actions/workflows/ci.yml)
 [![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
@@ -98,4 +98,3 @@ As decisões arquiteturais estão registradas na pasta `docs/adrs/`:
 *   [ADR-003: Observabilidade Sistêmica](docs/adrs/003_observabilidade.md)
 
 ---
-*Desenvolvido com foco em engenharia de software de alta performance e segurança da informação.*
