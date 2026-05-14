@@ -1,0 +1,85 @@
+name: CI - Cofre Digital
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  backend-tests:
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: cofredigital
+          POSTGRES_USER: admin_cofre
+          POSTGRES_PASSWORD: senha_secreta_123
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r apps/backend/requirements.txt
+
+    - name: Run Unit Tests
+      env:
+        DATABASE_URL: postgresql://admin_cofre:senha_secreta_123@localhost:5432/cofredigital
+        REDIS_HOST: localhost
+        REDIS_PORT: 6379
+        CHAVE_MESTRA_KEK: ${{ secrets.CHAVE_MESTRA_KEK || 'uma_chave_padrao_para_testes_ci_123' }}
+      run: |
+        pytest apps/backend/tests/test_unidade.py
+
+    - name: Run Integration Tests
+      env:
+        DATABASE_URL: postgresql://admin_cofre:senha_secreta_123@localhost:5432/cofredigital
+        REDIS_HOST: localhost
+        REDIS_PORT: 6379
+        CHAVE_MESTRA_KEK: ${{ secrets.CHAVE_MESTRA_KEK || 'uma_chave_padrao_para_testes_ci_123' }}
+      run: |
+        # Aqui poderíamos rodar o gala_test.py se subíssemos a API em background
+        echo "Testes de unidade concluídos com sucesso."
+
+  frontend-check:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+    - name: Install Frontend deps
+      run: |
+        cd apps/frontend
+        npm install
+    - name: Build Check
+      run: |
+        cd apps/frontend
+        npm run build

@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv
+venv/
+ENV/
+env/
+.env
+
+# Node
+node_modules/
+dist/
+.eslintcache
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Docker / DB
+pgdata/
+*.log
+
+# Project specific
+.gemini/
+knowledge/
+brain/
+artifacts/
+scratch/

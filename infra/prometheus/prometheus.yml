@@ -1,0 +1,8 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'cofre_digital_backend'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['host.docker.internal:54321'] # Aponta para o backend rodando no host
